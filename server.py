@@ -10,7 +10,7 @@ import MySQLdb
 import urlparse
 import datetime
 import time
-import wsgiref
+import wsgiref.handlers
 
 def db_init():
 	db = MySQLdb.connect(host = "localhost", user = "root",	passwd = "" , db = "rssi_mapper_user_locations")
