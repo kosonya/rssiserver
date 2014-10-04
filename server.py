@@ -74,9 +74,9 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 	if None != re.search("/api/v1/user_locations/rssi", self.path):
 		try:
 			params = urlparse.parse_qs(urlparse.urlparse(self.path).query)
-			start = params["start"]
-			stop = params["stop"]
-			limit = params["limit"]
+			start = params["start"][0]
+			stop = params["stop"][0]
+			limit = params["limit"][0]
 		except Exception as e:
 			print e
 			self.send_response(400, "Bad url: " + str(e))
@@ -85,7 +85,6 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 		else:
 			try:
 				db, c = db_init()
-				print start, stop, limit
 				query_template = "SELECT latitude, longitude, altitude, RSSI from rssi_mapper_user_locations WHERE timestamp >= %s AND timestamp <= %s LIMIT %s"
 				c.execute(query_template, (start, stop, limit))
 				res = c.fetchall()
@@ -93,7 +92,7 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 				db.close()
 			except Exception as e:
 				print e
-				self.send_response(500, "DB error: ", + str(e))
+				self.send_response(500, "DB error: " + str(e))
 				self.wfile.close()
 				return
 			else:
