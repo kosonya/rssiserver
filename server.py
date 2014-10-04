@@ -42,15 +42,25 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 				return
 			else:
 				try:
+					print "wat"
 					timestamp = parsed_data["user_location"]["timestamp"]
+					print timestamp
 					ipaddr = parsed_data["user_location"]["ipaddr"]
+					print ipaddr
 					macaddr = parsed_data["user_location"]["mac"]
+					print macaddr
 					imei = parsed_data["user_location"]["imei"]
+					print imei
 					lac = parsed_data["user_location"]["lac"]
+					print lac
 					latitude = parsed_data["user_location"]["latitude"]
+					print latitude
 					longitude = parsed_data["user_location"]["longitude"]
+					print longitude
 					altitude = parsed_data["user_location"]["altitude"]
+					print altitude
 					RSSI = parsed_data["user_location"]["RSSI"]
+					print RSSI
 				except Exception as e:
 					print e
 					self.send_response(400, "Incorrect json: " + str(e))
