@@ -6,9 +6,10 @@ import threading
 import cgi
 import re
 import json
+import MySQLdb
 
 def db_init():
-	db = MySQLdb.connect(host = "localhost" user = "root",	passwd = "" , db = "rssi_mapper_user_locations")
+	db = MySQLdb.connect(host = "localhost", user = "root",	passwd = "" , db = "rssi_mapper_user_locations")
 	db.set_character_set('utf8')
 	c = db.cursor()
 	c.execute('SET NAMES utf8')
