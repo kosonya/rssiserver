@@ -7,6 +7,7 @@ import cgi
 import re
 import json
 import MySQLdb
+import urlparse
 
 def db_init():
 	db = MySQLdb.connect(host = "localhost", user = "root",	passwd = "" , db = "rssi_mapper_user_locations")
@@ -71,8 +72,37 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
         
     def do_GET(self):
 	if None != re.search("/api/v1/user_locations/rssi", self.path):
-		print self.path
-        	self.send_response(200, "OK")
+		try:
+			params = urlparse.parse_qs(urlparse.urlparse(self.path).query)
+			start = params["start"]
+			stop = params["stop"]
+			limit = params["limit"]
+		except Exception as e:
+			print e
+			self.send_response(400, "Bad url: " + str(e))
+			self.wfile.close()
+			return
+		else:
+			try:
+				db, c = db_init()
+				query_template = "SELECT latitude, longitude, altitude, RSSI from rssi_mapper_user_locations WHERE timestamp >= %s AND timestamp <= %s LIMIT %s"
+				c.execute(query_template, (start, stop, limit))
+				res = c.fetchall()
+				c.close()
+				db.close()
+			except Exception as e:
+				print e
+				self.send_response(500, "DB error: ", str(e))
+				self.wfile.close()
+				return
+			else:
+				self.send_response(200, "OK")
+				#TODO
+				print res
+				self.wfile.close()
+				return
+	self.send_response(400, "Bad request")
+	self.wfile.close()
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     allow_reuse_address = True
