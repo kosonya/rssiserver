@@ -97,8 +97,12 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 				return
 			else:
 				self.send_response(200, "OK")
-				#TODO
 				print res
+				formatted_response = [{"latitude": int(row[0]), "longitude": int(row[1]), "altitude": int(row[2]), "RSSI": int(row[3])} for row in res]
+				print formatted_response
+				json_response = json.dumps(formatted_response)
+				print json_repsonse
+				#TODO
 				self.wfile.close()
 				return
 	self.send_response(400, "Bad request")
