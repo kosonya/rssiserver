@@ -8,6 +8,9 @@ import re
 import json
 import MySQLdb
 import urlparse
+import datetime
+import time
+import wsgiref
 
 def db_init():
 	db = MySQLdb.connect(host = "localhost", user = "root",	passwd = "" , db = "rssi_mapper_user_locations")
@@ -97,12 +100,18 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 				return
 			else:
 				self.send_response(200, "OK")
-				print res
-				formatted_response = [{"latitude": int(row[0]), "longitude": int(row[1]), "altitude": int(row[2]), "RSSI": int(row[3])} for row in res]
-				print formatted_response
+				#print res
+				formatted_response = [{"latitude": float(row[0]), "longitude": float(row[1]), "altitude": float(row[2]), "RSSI": int(row[3])} for row in res]
+				#print formatted_response
 				json_response = json.dumps(formatted_response)
 				print json_response
-				#TODO
+				self.send_header('Content-Type', "application/json")
+				self.send_header('Content-Length', len(json_response))
+				now = datetime.datetime.now()
+				stamp = time.mktime(now.timetuple())
+				timestamp = wsgiref.handlers.format_date_time(stamp)
+				self.send_header('Date', timestamp)
+				self.wfile.write(json_response)
 				self.wfile.close()
 				return
 	self.send_response(400, "Bad request")
