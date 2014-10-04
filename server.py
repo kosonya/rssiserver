@@ -7,6 +7,15 @@ import cgi
 import re
 import json
 
+def db_init():
+	db = MySQLdb.connect(host = "localhost" user = "root",	passwd = "" , db = "rssi_mapper_user_locations")
+	db.set_character_set('utf8')
+	c = db.cursor()
+	c.execute('SET NAMES utf8')
+	c.execute('SET CHARACTER SET utf8')
+	c.execute('SET character_set_connection=utf8')
+	return db, c
+
 class HTTPRequestHandler(BaseHTTPRequestHandler):
  
     def address_string(self): #Fix for the slow response
@@ -29,14 +38,34 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 			else:
 				try:
 					timestamp = parsed_data["user_location"]["timestamp"]
+					ipaddr = parsed_data["user_location"]["ipaddr"]
+					macaddr = parsed_data["user_location"]["mac"]
+					imei = parsed_data["user_location"]["imei"]
+					lac = parsed_data["user_location"]["lac"]
+					latitude = parsed_data["user_location"]["latitude"]
+					longitude = parsed_data["user_location"]["longitude"]
+					altitude = parsed_data["user_location"]["altitude"]
+					RSSI = parsed_data["user_location"]["RSSI"]
 				except Exception as e:
 					print e
 					self.send_response(400, "Incorrect json: " + str(e))
 					return
 				else:
-					self.send_response(200, "OK")
-					print parsed_data
-					return
+					try:
+						db, c = db_init()
+						query_template = "INSERT INTO rssi_mapper_user_locations (timestamp, ipaddr, macaddr, imei, lac, latitude, longitude, altitude, RSSI) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+						c.execute(query_template, (timestamp, ipaddr, macaddr, imei, lac, latitude, longitude, altitude, RSSI))
+						c.close()
+						db.commit()
+						db.close()
+					except Exception as e:
+						print e
+						self.send_response(500, str(e))
+						return
+					else:
+						self.send_response(200, "OK")
+						print timestamp, ipaddr, macaddr, imei, lac, latitude, longitude, altitude, RSSI
+						return
 	self.send_response(400, "Bad request")
         
     def do_GET(self):
