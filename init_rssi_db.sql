@@ -10,7 +10,6 @@ CREATE TABLE `rssi_mapper_user_locations` (
   `latitude` double NOT NULL,
   `longitude` double NOT NULL,
   `altitude` double NOT NULL,
-  `Latitude` double NOT NULL,
   `RSSI` int(11) NOT NULL,
   PRIMARY KEY (`timestamp`, `ipaddr`, `macaddr`, `imei`),
   KEY `timestamp` (`timestamp`)
