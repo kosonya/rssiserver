@@ -70,9 +70,9 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 	self.send_response(400, "Bad request")
         
     def do_GET(self):
-	return
-        print "Path:", self.path
-        self.send_response(200, "OK")
+	if None != re.search("/api/v1/user_locations/rssi", self.path):
+		print path
+        	self.send_response(200, "OK")
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     allow_reuse_address = True
