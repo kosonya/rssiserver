@@ -74,9 +74,9 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 	if None != re.search("/api/v1/user_locations/rssi", self.path):
 		try:
 			params = urlparse.parse_qs(urlparse.urlparse(self.path).query)
-			start = params["start"][0]
-			stop = params["stop"][0]
-			limit = params["limit"][0]
+			start = int(params["start"][0])
+			stop = int(params["stop"][0])
+			limit = int(params["limit"][0])
 		except Exception as e:
 			print e
 			self.send_response(400, "Bad url: " + str(e))
