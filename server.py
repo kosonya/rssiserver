@@ -101,7 +101,7 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 				formatted_response = [{"latitude": int(row[0]), "longitude": int(row[1]), "altitude": int(row[2]), "RSSI": int(row[3])} for row in res]
 				print formatted_response
 				json_response = json.dumps(formatted_response)
-				print json_repsonse
+				print json_response
 				#TODO
 				self.wfile.close()
 				return
