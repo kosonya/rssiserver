@@ -75,7 +75,7 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
         
     def do_GET(self):
 	if None != re.search("/api/v1/user_locations/rssi", self.path):
-		self.send_response(200, "OK")
+		self.send_response(404, "OK")
 		try:
 			params = urlparse.parse_qs(urlparse.urlparse(self.path).query)
 			start = int(params["start"][0])
