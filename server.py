@@ -112,7 +112,7 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 				stamp = time.mktime(now.timetuple())
 				timestamp = wsgiref.handlers.format_date_time(stamp)
 				print "timestamp:", timestamp
-				self.send_header('Date', timestamp)
+				#self.send_header('Date', timestamp)
 				self.wfile.write(json_response)
 				self.wfile.close()
 				print "wat?"
