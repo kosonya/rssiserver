@@ -88,7 +88,7 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 		else:
 			try:
 				db, c = db_init()
-				query_template = "SELECT latitude, longitude, altitude, RSSI from rssi_mapper_user_locations WHERE timestamp >= %s AND timestamp <= %s LIMIT %s"
+				query_template = "SELECT timestamp, latitude, longitude, altitude, RSSI from rssi_mapper_user_locations WHERE timestamp >= %s AND timestamp <= %s LIMIT %s"
 				c.execute(query_template, (start, stop, limit))
 				res = c.fetchall()
 				c.close()
@@ -101,7 +101,7 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 			else:
 				self.send_response(200, "OK")
 				#print res
-				formatted_response = [{"latitude": float(row[0]), "longitude": float(row[1]), "altitude": float(row[2]), "RSSI": int(row[3])} for row in res]
+				formatted_response = [{"timestamp": int(row[0]) "latitude": float(row[1]), "longitude": float(row[2]), "altitude": float(row[3]), "RSSI": int(row[4])} for row in res]
 				#print formatted_response
 				json_response = json.dumps(formatted_response)
 				print json_response
