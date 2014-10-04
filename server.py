@@ -113,6 +113,7 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 				self.send_header('Date', timestamp)
 				self.wfile.write(json_response)
 				self.wfile.close()
+				print "wat?"
 				return
 	self.send_response(400, "Bad request")
 	self.wfile.close()
