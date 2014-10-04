@@ -75,7 +75,6 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
         
     def do_GET(self):
 	if None != re.search("/api/v1/user_locations/rssi", self.path):
-		self.send_response(404, "OK")
 		try:
 			params = urlparse.parse_qs(urlparse.urlparse(self.path).query)
 			start = int(params["start"][0])
@@ -114,6 +113,7 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 				timestamp = wsgiref.handlers.format_date_time(stamp)
 				print "timestamp:", timestamp
 				#self.send_header('Date', timestamp)
+				self.end_headers()
 				self.wfile.write(json_response)
 				self.wfile.close()
 				print "wat?"
