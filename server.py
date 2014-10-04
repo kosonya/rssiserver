@@ -85,6 +85,7 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 		else:
 			try:
 				db, c = db_init()
+				print start, stop, limit
 				query_template = "SELECT latitude, longitude, altitude, RSSI from rssi_mapper_user_locations WHERE timestamp >= %s AND timestamp <= %s LIMIT %s"
 				c.execute(query_template, (start, stop, limit))
 				res = c.fetchall()
@@ -92,7 +93,7 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 				db.close()
 			except Exception as e:
 				print e
-				self.send_response(500, "DB error: ", str(e))
+				self.send_response(500, "DB error: ", + str(e))
 				self.wfile.close()
 				return
 			else:
