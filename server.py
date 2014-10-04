@@ -107,9 +107,11 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 				print json_response
 				self.send_header('Content-Type', "application/json")
 				self.send_header('Content-Length', len(json_response))
+				print "len:", len(json_response)
 				now = datetime.datetime.now()
 				stamp = time.mktime(now.timetuple())
 				timestamp = wsgiref.handlers.format_date_time(stamp)
+				print "timestamp:", timestamp
 				self.send_header('Date', timestamp)
 				self.wfile.write(json_response)
 				self.wfile.close()
