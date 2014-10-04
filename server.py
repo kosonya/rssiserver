@@ -14,16 +14,33 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
         return host
  
     def do_POST(self):
-        print "Path:", self.path
-        ctype, _ = cgi.parse_header(self.headers.getheader('content-type'))
-        print "Content type:", ctype
-        length = int(self.headers.getheader('content-length'))
-        print "Length:", length
-        data = cgi.parse_qs(self.rfile.read(length), keep_blank_values=1)
-        print "Data:", data
-        self.send_response(200, "OK")
+	if None != re.search('/user_locations.json', self.path):
+		ctype, _ = cgi.parse_header(self.headers.getheader('content-type'))
+		if "application/json" == ctype:
+			length = int(self.headers.getheader('content-length'))
+			data = cgi.parse_qs(self.rfile.read(length), keep_blank_values=1)
+			print data
+			try:
+				parsed_data = json.loads(data.keys()[0])
+			except Exception as e:
+				print e
+				self.send_response(400, "Failed to parse json: " + str(e))
+				return
+			else:
+				try:
+					timestamp = parsed_data["user_location"]["timestamp"]
+				except Exception as e:
+					print e
+					self.send_response(400, "Incorrect json: " + str(e))
+					return
+				else:
+					self.send_response(200, "OK")
+					print parsed_data
+					return
+	self.send_response(400, "Bad request")
         
     def do_GET(self):
+	return
         print "Path:", self.path
         self.send_response(200, "OK")
 
@@ -52,7 +69,7 @@ class SimpleHttpServer():
 
 
 def main():
-    http_server = SimpleHttpServer('', 8001)
+    http_server = SimpleHttpServer('', 31415)
     print 'HTTP Server Running...........'
     http_server.start()
     http_server.waitForThread()
