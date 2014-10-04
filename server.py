@@ -105,8 +105,8 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 				#print formatted_response
 				json_response = json.dumps(formatted_response)
 				print json_response
-				self.send_header('Content-Type', "application/json")
-				self.send_header('Content-Length', len(json_response))
+				#self.send_header('Content-Type', "application/json")
+				#self.send_header('Content-Length', len(json_response))
 				print "len:", len(json_response)
 				now = datetime.datetime.now()
 				stamp = time.mktime(now.timetuple())
