@@ -13,7 +13,7 @@ import time
 import wsgiref.handlers
 
 def db_init():
-	db = MySQLdb.connect(host = "localhost", user = "root",	passwd = "" , db = "rssi_mapper_user_locations")
+	db = MySQLdb.connect(host = "localhost", user = "root",	passwd = "12345" , db = "rssi_mapper_user_locations")
 	db.set_character_set('utf8')
 	c = db.cursor()
 	c.execute('SET NAMES utf8')
